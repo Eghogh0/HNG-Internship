@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Todo Card Stage 0</title>
+
+<style>
+
+:root{
+--bg:#f6f7fb;
+--card:#ffffff;
+--primary:#4f46e5;
+--high:#ef4444;
+--medium:#f59e0b;
+--low:#10b981;
+--text:#111827;
+--muted:#6b7280;
+}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Inter,system-ui,Arial;
+}
+
+body{
+background:var(--bg);
+display:flex;
+justify-content:center;
+align-items:flex-start;
+min-height:100vh;
+padding:20px;
+}
+
+/* Card */
+
+.todo-card{
+background:var(--card);
+width:100%;
+max-width:480px;
+padding:20px;
+border-radius:14px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.todo-header{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:10px;
+}
+
+.todo-title{
+font-size:1.2rem;
+font-weight:600;
+}
+
+.todo-description{
+color:var(--muted);
+line-height:1.4;
+}
+
+.badge{
+padding:4px 10px;
+border-radius:999px;
+font-size:.75rem;
+font-weight:600;
+color:white;
+}
+
+.priority-high{background:var(--high);}
+.priority-medium{background:var(--medium);}
+.priority-low{background:var(--low);}
+
+.status{
+font-size:.8rem;
+font-weight:600;
+color:var(--primary);
+}
+
+.tags{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+}
+
+.tag{
+background:#eef2ff;
+padding:4px 8px;
+border-radius:8px;
+font-size:.75rem;
+}
+
+.actions{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:8px;
+}
+
+.buttons{
+display:flex;
+gap:8px;
+}
+
+button{
+border:none;
+padding:6px 12px;
+border-radius:6px;
+cursor:pointer;
+font-size:.8rem;
+}
+
+.edit-btn{
+background:#e0e7ff;
+}
+
+.delete-btn{
+background:#fee2e2;
+}
+
+.checkbox{
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.strike{
+text-decoration:line-through;
+opacity:.6;
+}
+
+time{
+font-size:.8rem;
+color:var(--muted);
+}
+
+@media(max-width:480px){
+
+.todo-card{
+padding:16px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<article 
+class="todo-card" 
+data-testid="test-todo-card"
+role="region"
+>
+
+<div class="checkbox">
+
+<input 
+type="checkbox"
+id="complete"
+data-testid="test-todo-complete-toggle"
+aria-label="Mark task complete"
+/>
+
+<label for="complete">Complete</label>
+
+</div>
+
+<div class="todo-header">
+
+<h3 
+class="todo-title"
+data-testid="test-todo-title"
+>
+Finish Mobile Stage 0 UI
+</h3>
+
+<span 
+class="badge priority-high"
+data-testid="test-todo-priority"
+aria-label="High Priority"
+>
+High
+</span>
+
+</div>
+
+<p 
+class="todo-description"
+data-testid="test-todo-description"
+>
+Build accessible, responsive Todo Card component for Stage 0 evaluation.
+</p>
+
+<div>
+
+<time 
+datetime="2026-03-01T18:00:00Z"
+data-testid="test-todo-due-date"
+>
+Due March 1, 2026 6:00 PM
+</time>
+
+<br>
+
+<time 
+data-testid="test-todo-time-remaining"
+aria-live="polite"
+id="timeRemaining"
+>
+Calculating...
+</time>
+
+</div>
+
+<span 
+class="status"
+data-testid="test-todo-status"
+>
+Pending
+</span>
+
+<ul 
+class="tags"
+role="list"
+data-testid="test-todo-tags"
+>
+
+<li 
+class="tag"
+data-testid="test-todo-tag-work"
+>
+work
+</li>
+
+<li 
+class="tag"
+data-testid="test-todo-tag-urgent"
+>
+urgent
+</li>
+
+<li 
+class="tag"
+>
+design
+</li>
+
+</ul>
+
+<div class="actions">
+
+<div class="buttons">
+
+<button 
+class="edit-btn"
+data-testid="test-todo-edit-button"
+aria-label="Edit task"
+>
+Edit
+</button>
+
+<button 
+class="delete-btn"
+data-testid="test-todo-delete-button"
+aria-label="Delete task"
+>
+Delete
+</button>
+
+</div>
+
+</div>
+
+</article>
+
+<script>
+
+const dueDate = new Date("2026-03-01T18:00:00Z");
+const timeRemaining = document.getElementById("timeRemaining");
+const checkbox = document.getElementById("complete");
+const title = document.querySelector(".todo-title");
+const status = document.querySelector("[data-testid='test-todo-status']");
+
+function updateTime(){
+
+const now = new Date();
+const diff = dueDate - now;
+
+const minutes = Math.floor(diff/60000);
+const hours = Math.floor(minutes/60);
+const days = Math.floor(hours/24);
+
+let text = "";
+
+if(diff <= 0){
+
+const overdue = Math.abs(hours);
+
+if(overdue < 1){
+text = "Due now!";
+}
+else{
+text = `Overdue by ${overdue} hours`;
+}
+
+}else{
+
+if(days > 1){
+text = `Due in ${days} days`;
+}
+else if(days === 1){
+text = "Due tomorrow";
+}
+else if(hours > 0){
+text = `Due in ${hours} hours`;
+}
+else{
+text = `Due in ${minutes} minutes`;
+}
+
+}
+
+timeRemaining.textContent = text;
+
+}
+
+updateTime();
+setInterval(updateTime,60000);
+
+checkbox.addEventListener("change",()=>{
+
+if(checkbox.checked){
+
+title.classList.add("strike");
+status.textContent="Done";
+
+}else{
+
+title.classList.remove("strike");
+status.textContent="Pending";
+
+}
+
+});
+
+document.querySelector(".edit-btn").addEventListener("click",()=>{
+console.log("edit clicked");
+});
+
+document.querySelector(".delete-btn").addEventListener("click",()=>{
+alert("Delete clicked");
+});
+
+</script>
+
+</body>
+</html>
