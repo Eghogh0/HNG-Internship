@@ -1,16 +1,22 @@
-const fs = require("fs");
-const path = require("path");
+const sqlite3 = require("sqlite3").verbose();
 
-const filePath = path.join(__dirname, "../../data.json");
+const db = new sqlite3.Database("./database.sqlite");
 
-function readData() {
-  if (!fs.existsSync(filePath)) return [];
-  const data = fs.readFileSync(filePath);
-  return JSON.parse(data);
-}
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS profiles (
+      id TEXT PRIMARY KEY,
+      name TEXT UNIQUE,
+      gender TEXT,
+      gender_probability REAL,
+      sample_size INTEGER,
+      age INTEGER,
+      age_group TEXT,
+      country_id TEXT,
+      country_probability REAL,
+      created_at TEXT
+    )
+  `);
+});
 
-function writeData(data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-}
-
-module.exports = { readData, writeData };
+module.exports = db;
