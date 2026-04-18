@@ -47,7 +47,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
         child: Column(
           children: [
             DropdownButtonFormField(
-              value: type,
+              initialValue: type,
               items: ["Length", "Weight", "Temperature", "Currency"]
                   .map((e) => DropdownMenuItem(
                         value: e,
@@ -78,7 +78,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField(
-                    value: from,
+                    initialValue: from,
                     items: units
                         .map((e) =>
                             DropdownMenuItem(value: e, child: Text(e)))
@@ -89,7 +89,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: DropdownButtonFormField(
-                    value: to,
+                    initialValue: to,
                     items: units
                         .map((e) =>
                             DropdownMenuItem(value: e, child: Text(e)))
