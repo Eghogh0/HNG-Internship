@@ -42,8 +42,13 @@ exports.createProfile = async (req, res) => {
       data: profile
     });
 
-  } catch (err) {
-    return errorResponse(res, 502, `${err.type} returned an invalid response`);
+  } catch (err) 
+  {
+  return res.status(502).json
+  ({
+    status: "error",
+    message: `${err.type} returned an invalid response`
+  });
   }
 };
 
