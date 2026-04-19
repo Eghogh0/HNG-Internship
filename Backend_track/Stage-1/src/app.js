@@ -7,7 +7,10 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// IMPORTANT: this line must exist
+app.get("/", (req, res) => {
+  res.send("API working");
+});
+
 app.use("/api", profileRoutes);
 
 module.exports = app;
