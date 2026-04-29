@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/widgets/tool_card.dart';
 import '../unit_converter/converter_screen.dart';
+import '../task_manager/ui/task_list_screen.dart';   // <-- import
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -20,9 +21,17 @@ class HomeScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const ConverterScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const ConverterScreen()),
+                );
+              },
+            ),
+            ToolCard(                                   // <-- NEW CARD
+              title: "Task Manager",
+              icon: Icons.checklist,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const TaskListScreen()),
                 );
               },
             ),

@@ -1,17 +1,32 @@
-# stage0
+# Smart Utility Toolkit
 
-A new Flutter project.
+A Flutter app that provides:
+- **Unit Converter** (Length, Weight, Temperature, Currency)
+- **Task Manager** (Create, edit, delete, mark completed – with offline storage)
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+### Unit Converter
+- Convert between Meter, Kilometer, Centimeter
+- Convert between Gram, Kilogram
+- Convert Celsius ↔ Fahrenheit
+- Convert NGN ↔ USD (static rates)
 
-A few resources to get you started if this is your first Flutter project:
+### Task Manager
+- Add tasks with title + optional description
+- Mark tasks as completed/uncompleted
+- Edit any existing task
+- Delete tasks with confirmation dialog
+- All tasks are saved locally using SharedPreferences – works offline
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## How to Run
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository
+2. Ensure Flutter SDK is installed
+3. Run `flutter pub get`
+4. Run `flutter run`
+
+## Build APK
+
+```bash
+flutter build apk --release
