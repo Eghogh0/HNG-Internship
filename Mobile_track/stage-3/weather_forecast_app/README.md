@@ -29,7 +29,8 @@
 - **Connectivity:** `connectivity_plus`
 
 ## Screenshots / Recordings
-(Add your own screenshots or GIFs here)
+<img width="404" height="733" alt="image" src="https://github.com/user-attachments/assets/3bd5e247-1749-460d-bc88-ee9d2494aae5" />
+
 
 ## Setup & Run
 1. Clone repo.
