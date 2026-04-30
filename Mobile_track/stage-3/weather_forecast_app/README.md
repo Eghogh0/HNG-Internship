@@ -1,17 +1,38 @@
-# weather_forecast_app
+# WeatherNow - HNG Internship Stage 3
 
-A new Flutter project.
+**App chosen:** Weather Forecast App
 
-## Getting Started
+## Features
+- Real-time weather display (temperature, humidity, wind, conditions, icons)
+- Current location detection with manual city search
+- 5-day forecast (midday representative data)
+- Offline caching with SharedPreferences (30-minute expiry)
+- Smooth animations: staggered list entrances (Slide + Fade) and page transitions (PageTransition)
+- Skeleton shimmer loading while fetching
+- Comprehensive error handling (no internet, permission denied, API errors) with retry buttons
 
-This project is a starting point for a Flutter application.
+## APIs Used
+- [OpenWeatherMap Current Weather](https://openweathermap.org/current)
+- [OpenWeatherMap 5-Day Forecast](https://openweathermap.org/forecast5)
 
-A few resources to get you started if this is your first Flutter project:
+## Animation Highlights
+- **List/Grid Items:** `flutter_staggered_animations` used for staggered slide + fade of weather cards and forecast tiles on home & forecast screens.
+- **Screen Transitions:** `page_transition` provides right-to-left and bottom-to-top animations for search and forecast details screens.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Dependencies & Architecture
+- **State Management:** `setState` (lightweight, no external state management needed)
+- **HTTP:** `http`
+- **Location:** `geolocator`, `geocoding`
+- **Caching:** `shared_preferences`
+- **Loading:** `shimmer`
+- **Animations:** `flutter_staggered_animations`, `page_transition`
+- **Connectivity:** `connectivity_plus`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Screenshots / Recordings
+(Add your own screenshots or GIFs here)
+
+## Setup & Run
+1. Clone repo.
+2. Insert your OpenWeatherMap API key in `lib/utils/constants.dart`.
+3. Run `flutter pub get` and `flutter run`.
+4. Build APK: `flutter build apk --release`.
