@@ -68,7 +68,7 @@ class ForecastModel {
       } else {
         // Optionally pick the one closest to 12:00
         final hour = int.parse(dtTxt.split(' ')[1].split(':')[0]);
-        final existingHour = 12; // we can store hour in a temporary map
+        const existingHour = 12; // we can store hour in a temporary map
         // Simplified: replace if closer to 12
         // We'll just keep the latest or use a simple rule: if hour between 11-13
         if (hour >= 11 && hour <= 13) {

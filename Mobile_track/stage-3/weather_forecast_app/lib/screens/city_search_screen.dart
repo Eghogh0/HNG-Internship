@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import '../services/api_service.dart';
 import '../models/weather_model.dart';
 

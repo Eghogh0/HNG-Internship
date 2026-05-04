@@ -1,5 +1,5 @@
 name: weather_forecast_app
-description: A weather forecast app for HNG Internship Stage 3.
+description: A weather forecast app for HNG Internship Stage 4
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -17,8 +17,8 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   page_transition: ^2.1.0
   intl: ^0.18.1
-  provider: ^6.1.1
   connectivity_plus: ^5.0.2
+  url_strategy: ^0.3.0
 
 dev_dependencies:
   flutter_test:
@@ -27,4 +27,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # No custom assets needed
