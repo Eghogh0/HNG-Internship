@@ -3,7 +3,7 @@ import 'package:url_strategy/url_strategy.dart';
 import 'screens/home_screen.dart';
 
 void main() {
-  setPathUrlStrategy();   // removes the '#' from web URLs
+  setPathUrlStrategy();           // removes '#' from web URLs
   runApp(const MyApp());
 }
 

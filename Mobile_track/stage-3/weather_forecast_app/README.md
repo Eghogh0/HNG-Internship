@@ -1,39 +1,39 @@
-# WeatherNow - HNG Internship Stage 3
+# WeatherNow – Cross‑Platform Weather App (HNG Stage 4)
 
-**App chosen:** Weather Forecast App
+A **single Flutter codebase** delivering a weather experience on  
+📱 **Android & iOS** · 🖥️ **Windows, macOS, Linux** · 🌐 **Web (with offline PWA)**
 
 ## Features
-- Real-time weather display (temperature, humidity, wind, conditions, icons)
-- Current location detection with manual city search
-- 5-day forecast (midday representative data)
-- Offline caching with SharedPreferences (30-minute expiry)
-- Smooth animations: staggered list entrances (Slide + Fade) and page transitions (PageTransition)
-- Skeleton shimmer loading while fetching
-- Comprehensive error handling (no internet, permission denied, API errors) with retry buttons
 
-## APIs Used
-- [OpenWeatherMap Current Weather](https://openweathermap.org/current)
-- [OpenWeatherMap 5-Day Forecast](https://openweathermap.org/forecast5)
+- 🌤️ Current weather: temperature, humidity, wind, pressure, animated icon
+- 📍 Auto‑location detection & manual city search
+- 📅 5‑day forecast (representative midday data)
+- 📴 Offline caching via `shared_preferences` (works on all platforms)
+- 🎭 Smooth animations: staggered list entrance + page transitions (every platform)
+- 🖥️ Desktop‑only: application menu bar (File/Edit/View/Help), keyboard shortcuts, right‑click context menus
+- 🌐 Web‑only: PWA service worker for offline loading, clean URLs
+- 📐 Responsive breakpoint at 600px – drawer on narrow, sidebar on wide
 
-## Animation Highlights
-- **List/Grid Items:** `flutter_staggered_animations` used for staggered slide + fade of weather cards and forecast tiles on home & forecast screens.
-- **Screen Transitions:** `page_transition` provides right-to-left and bottom-to-top animations for search and forecast details screens.
+## Platform Adaptations
 
-## Dependencies & Architecture
-- **State Management:** `setState` (lightweight, no external state management needed)
-- **HTTP:** `http`
-- **Location:** `geolocator`, `geocoding`
-- **Caching:** `shared_preferences`
-- **Loading:** `shimmer`
-- **Animations:** `flutter_staggered_animations`, `page_transition`
-- **Connectivity:** `connectivity_plus`
+| Feature               | Mobile          | Desktop (Win/Mac/Linux) | Web                 |
+|-----------------------|-----------------|-------------------------|---------------------|
+| Navigation            | Drawer + AppBar | Sidebar NavigationRail + top menu bar | Same as desktop (wide) or drawer (narrow) |
+| Input methods         | Touch, pull‑to‑refresh | Mouse hover, right‑click context menus, 5 keyboard shortcuts | All of the above |
+| Offline support       | ✅              | ✅                      | ✅ (service worker) |
+| Animations            | ✅              | ✅                      | ✅                  |
+| Window resizing       | N/A             | ✅                      | ✅ (browser resize) |
+| Keyboard shortcuts    | ❌              | Ctrl+R, F, H, Q, D      | Same shortcuts      |
+| Context menus         | ❌              | Right‑click on weather card & forecast tiles | Right‑click |
 
-## Screenshots / Recordings
-<img width="404" height="733" alt="image" src="https://github.com/user-attachments/assets/3bd5e247-1749-460d-bc88-ee9d2494aae5" />
+## Keyboard Shortcuts (Desktop & Web)
 
+| Shortcut   | Action                   |
+|------------|--------------------------|
+| Ctrl + R   | Refresh weather data     |
+| Ctrl + F   | Search city              |
+| Ctrl + H   | Go to home (refresh)     |
+| Ctrl + Q   | Quit app (disabled on web) |
+| Ctrl + D   | Open 5‑day forecast details |
 
-## Setup & Run
-1. Clone repo.
-2. Insert your OpenWeatherMap API key in `lib/utils/constants.dart`.
-3. Run `flutter pub get` and `flutter run`.
-4. Build APK: `flutter build apk --release`.
+## Folder Structure (shared vs platform‑specific)

@@ -9,7 +9,7 @@ class CurrentWeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: SystemMouseCursors.click,   // show pointer on desktop
+      cursor: SystemMouseCursors.click,
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -17,11 +17,14 @@ class CurrentWeatherCard extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Text(weather.cityName, style: Theme.of(context).textTheme.headlineSmall),
+              Text(weather.cityName,
+                  style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 8),
               Image.network(weather.iconUrl, scale: 0.8),
-              Text('${weather.temperature.round()}°C', style: Theme.of(context).textTheme.displayMedium),
-              Text(Helpers.capitalize(weather.description), style: Theme.of(context).textTheme.titleMedium),
+              Text('${weather.temperature.round()}°C',
+                  style: Theme.of(context).textTheme.displayMedium),
+              Text(Helpers.capitalize(weather.description),
+                  style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

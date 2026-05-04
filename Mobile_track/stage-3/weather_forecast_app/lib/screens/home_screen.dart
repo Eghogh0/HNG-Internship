@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io' show exit;        // used only on desktop, we check kIsWeb before calling
+import 'dart:io' show exit;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,10 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ---------- Data Loading ----------
   Future<void> _initWeather() async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
+    setState(() { _isLoading = true; _error = null; });
     try {
       final connectivityResult = await Connectivity().checkConnectivity();
       _isOffline = connectivityResult == ConnectivityResult.none;
@@ -80,28 +77,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchWeatherByCity(String city) async {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
+    setState(() { _isLoading = true; _error = null; });
     try {
       final weather = await _api.fetchCurrentWeatherByCity(city);
       final forecast = await _api.fetchForecastByCity(city);
       await _cache.cacheWeatherData(jsonEncode(weather.toJson()));
-      await _cache.cacheForecastData(jsonEncode(forecast.map((e) => e.toJson()).toList()));
+      await _cache.cacheForecastData(
+          jsonEncode(forecast.map((e) => e.toJson()).toList()));
       setState(() {
         _currentWeather = weather;
         _forecast = forecast;
         _isLoading = false;
       });
     } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
-      if (await _cache.isCacheValid()) {
-        await _loadCachedData();
-      }
+      setState(() { _error = e.toString(); _isLoading = false; });
+      if (await _cache.isCacheValid()) await _loadCachedData();
     }
   }
 
@@ -116,7 +106,9 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       if (forecastString != null) {
         final List<dynamic> list = jsonDecode(forecastString);
-        _forecast = list.map((e) => WeatherModel.fromJson(e as Map<String, dynamic>)).toList();
+        _forecast = list
+            .map((e) => WeatherModel.fromJson(e as Map<String, dynamic>))
+            .toList();
       }
       setState(() {
         _isLoading = false;
@@ -136,7 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _navigateToSearch() async {
     final city = await Navigator.push(
       context,
-      PageTransition(child: const CitySearchScreen(), type: PageTransitionType.rightToLeft),
+      PageTransition(
+          child: const CitySearchScreen(),
+          type: PageTransitionType.rightToLeft),
     );
     if (city != null && city is String) _fetchWeatherByCity(city);
   }
@@ -145,29 +139,50 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_forecast != null && _forecast!.isNotEmpty) {
       Navigator.push(
         context,
-        PageTransition(child: ForecastDetailsScreen(forecast: _forecast!), type: PageTransitionType.bottomToTop),
+        PageTransition(
+            child: ForecastDetailsScreen(forecast: _forecast!),
+            type: PageTransitionType.bottomToTop),
       );
     }
+  }
+
+  void _showAboutDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('WeatherNow'),
+        content: const Text(
+            'A cross‑platform weather app built for HNG Stage 4.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK')),
+        ],
+      ),
+    );
   }
 
   // ---------- Keyboard Shortcuts ----------
   void _handleKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent) {
       final keys = HardwareKeyboard.instance.logicalKeysPressed;
-      if (keys.contains(LogicalKeyboardKey.controlLeft) ||
+      final hasCtrl =
+          keys.contains(LogicalKeyboardKey.controlLeft) ||
           keys.contains(LogicalKeyboardKey.controlRight) ||
-          keys.contains(LogicalKeyboardKey.meta)) { // meta for macOS
+          keys.contains(LogicalKeyboardKey.meta); // meta = Cmd on macOS
+      if (hasCtrl) {
         if (event.logicalKey == LogicalKeyboardKey.keyR) {
           _initWeather();
         } else if (event.logicalKey == LogicalKeyboardKey.keyF) {
           _navigateToSearch();
         } else if (event.logicalKey == LogicalKeyboardKey.keyH) {
-          _initWeather();           // home = refresh
+          _initWeather();
         } else if (event.logicalKey == LogicalKeyboardKey.keyQ) {
           if (kIsWeb) {
-            // no-op on web
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Shortcut disabled on web')));
           } else {
-            exit(0);                // close desktop app
+            exit(0);
           }
         } else if (event.logicalKey == LogicalKeyboardKey.keyD) {
           _navigateToForecastDetails();
@@ -180,7 +195,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showContextMenu(Offset position, String item) {
     showMenu<String>(
       context: context,
-      position: RelativeRect.fromLTRB(position.dx, position.dy, position.dx + 1, position.dy + 1),
+      position: RelativeRect.fromLTRB(
+          position.dx, position.dy, position.dx + 1, position.dy + 1),
       items: [
         if (item == 'weather')
           const PopupMenuItem(value: 'refresh', child: Text('Refresh'))
@@ -211,7 +227,9 @@ class _HomeScreenState extends State<HomeScreen> {
             : AppBar(
                 title: const Text('WeatherNow'),
                 actions: [
-                  IconButton(icon: const Icon(Icons.search), onPressed: _navigateToSearch),
+                  IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: _navigateToSearch),
                 ],
               ),
         drawer: isDesktop
@@ -220,15 +238,34 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                    DrawerHeader(child: Text('WeatherNow', style: Theme.of(context).textTheme.headlineSmall)),
-                    ListTile(title: const Text('Home'), onTap: () { Navigator.pop(context); _initWeather(); }),
-                    ListTile(title: const Text('Search City'), onTap: () { Navigator.pop(context); _navigateToSearch(); }),
+                    DrawerHeader(
+                        child: Text('WeatherNow',
+                            style:
+                                Theme.of(context).textTheme.headlineSmall)),
+                    ListTile(
+                        title: const Text('Home'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _initWeather();
+                        }),
+                    ListTile(
+                        title: const Text('Search City'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _navigateToSearch();
+                        }),
                     if (_forecast != null)
-                      ListTile(title: const Text('5‑Day Forecast'), onTap: () { Navigator.pop(context); _navigateToForecastDetails(); }),
+                      ListTile(
+                          title: const Text('5‑Day Forecast'),
+                          onTap: () {
+                            Navigator.pop(context);
+                            _navigateToForecastDetails();
+                          }),
                   ],
                 ),
               ),
-        body: isDesktop ? _buildDesktopLayout(context) : _buildMobileLayout(context),
+        body:
+            isDesktop ? _buildDesktopLayout(context) : _buildMobileLayout(context),
       ),
     );
   }
@@ -260,9 +297,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 labelType: NavigationRailLabelType.all,
                 destinations: const [
-                  NavigationRailDestination(icon: Icon(Icons.home), label: Text('Home')),
-                  NavigationRailDestination(icon: Icon(Icons.search), label: Text('Search')),
-                  NavigationRailDestination(icon: Icon(Icons.calendar_today), label: Text('Forecast')),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.home), label: Text('Home')),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.search), label: Text('Search')),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.calendar_today),
+                      label: Text('Forecast')),
                 ],
               ),
               const VerticalDivider(width: 1),
@@ -272,7 +313,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: _isLoading
                       ? const ShimmerLoading()
                       : _error != null && _currentWeather == null
-                          ? ErrorDisplay(message: _error!, onRetry: _initWeather)
+                          ? ErrorDisplay(
+                              message: _error!, onRetry: _initWeather)
                           : _buildContent(),
                 ),
               ),
@@ -291,15 +333,17 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           const SizedBox(width: 8),
           PopupMenuButton<String>(
-            itemBuilder: (_) => [
-              const PopupMenuItem(value: 'refresh', child: Text('Refresh (Ctrl+R)')),
-              const PopupMenuItem(value: 'quit', child: Text('Quit (Ctrl+Q)')),
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                  value: 'refresh', child: Text('Refresh (Ctrl+R)')),
+              PopupMenuItem(value: 'quit', child: Text('Quit (Ctrl+Q)')),
             ],
             onSelected: (val) {
               if (val == 'refresh') _initWeather();
-              else if (val == 'quit') {
+              if (val == 'quit') {
                 if (kIsWeb) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cannot quit a web app')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Cannot quit a web app')));
                 } else {
                   exit(0);
                 }
@@ -308,19 +352,21 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Text('File'),
           ),
           PopupMenuButton<String>(
-            itemBuilder: (_) => [
-              const PopupMenuItem(value: 'search', child: Text('Search (Ctrl+F)')),
-              const PopupMenuItem(value: 'home', child: Text('Home (Ctrl+H)')),
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                  value: 'search', child: Text('Search (Ctrl+F)')),
+              PopupMenuItem(value: 'home', child: Text('Home (Ctrl+H)')),
             ],
             onSelected: (val) {
               if (val == 'search') _navigateToSearch();
-              else if (val == 'home') _initWeather();
+              if (val == 'home') _initWeather();
             },
             child: const Text('Edit'),
           ),
           PopupMenuButton<String>(
-            itemBuilder: (_) => [
-              const PopupMenuItem(value: 'forecast', child: Text('Forecast (Ctrl+D)')),
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                  value: 'forecast', child: Text('Forecast (Ctrl+D)')),
             ],
             onSelected: (val) {
               if (val == 'forecast') _navigateToForecastDetails();
@@ -328,9 +374,12 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Text('View'),
           ),
           PopupMenuButton<String>(
-            itemBuilder: (_) => [
-              const PopupMenuItem(value: 'about', child: Text('About')),
+            itemBuilder: (_) => const [
+              PopupMenuItem(value: 'about', child: Text('About')),
             ],
+            onSelected: (val) {
+              if (val == 'about') _showAboutDialog();
+            },
             child: const Text('Help'),
           ),
         ],
@@ -351,7 +400,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             if (_currentWeather != null)
               GestureDetector(
-                onSecondaryTapUp: (details) => _showContextMenu(details.globalPosition, 'weather'),
+                onSecondaryTapUp: (details) =>
+                    _showContextMenu(details.globalPosition, 'weather'),
                 child: MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: CurrentWeatherCard(weather: _currentWeather!),
@@ -362,7 +412,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Next Days', style: Theme.of(context).textTheme.titleLarge),
+                  Text('Next Days',
+                      style: Theme.of(context).textTheme.titleLarge),
                   TextButton(
                     onPressed: _navigateToForecastDetails,
                     child: const Text('See All'),
@@ -372,7 +423,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ...List.generate(
                 _forecast!.length > 5 ? 5 : _forecast!.length,
                 (index) => GestureDetector(
-                  onSecondaryTapUp: (details) => _showContextMenu(details.globalPosition, 'forecast$index'),
+                  onSecondaryTapUp: (details) =>
+                      _showContextMenu(details.globalPosition, 'forecast$index'),
                   child: DailyForecastTile(
                     weather: _forecast![index],
                     dayLabel: 'Day ${index + 1}',
@@ -383,7 +435,8 @@ class _HomeScreenState extends State<HomeScreen> {
             if (_error != null)
               Padding(
                 padding: const EdgeInsets.only(top: 12),
-                child: Text(_error!, style: const TextStyle(color: Colors.orange)),
+                child: Text(_error!,
+                    style: const TextStyle(color: Colors.orange)),
               ),
           ],
         ),
