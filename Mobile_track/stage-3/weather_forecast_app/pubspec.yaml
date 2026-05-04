@@ -1,29 +1,88 @@
-name: weather_forecast_app
-description: A weather forecast app for HNG Internship Stage 4
-publish_to: 'none'
-version: 1.0.0+1
+name: Build All Platforms & Deploy Web
 
-environment:
-  sdk: '>=3.1.0 <4.0.0'
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:   # allows manual trigger from Actions tab
 
-dependencies:
-  flutter:
-    sdk: flutter
-  http: ^1.1.0
-  geolocator: ^10.1.0
-  geocoding: ^2.1.1
-  shared_preferences: ^2.2.2
-  shimmer: ^3.0.0
-  flutter_staggered_animations: ^1.1.1
-  page_transition: ^2.1.0
-  intl: ^0.18.1
-  connectivity_plus: ^5.0.2
-  url_strategy: ^0.3.0
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'   # adjust to your Flutter version
+      - run: flutter config --enable-windows-desktop
+      - run: flutter pub get
+      - run: flutter build windows --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-exe
+          path: build/windows/x64/runner/Release/
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.1
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+      - run: flutter config --enable-macos-desktop
+      - run: flutter pub get
+      - run: flutter build macos
+      - run: |
+          mkdir dist
+          cp -R build/macos/Build/Products/Release/weather_forecast_app.app dist/
+          hdiutil create -volname "WeatherNow" -srcfolder dist -ov -format UDZO weather_forecast_app.dmg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: weather_forecast_app.dmg
 
-flutter:
-  uses-material-design: true
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+      - run: flutter config --enable-linux-desktop
+      - run: flutter pub get
+      - run: flutter build linux --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-appimage
+          path: build/linux/x64/release/bundle/
+
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+      - run: flutter config --enable-web
+      - run: flutter pub get
+      - run: flutter build web --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web/
+
+  deploy-web:
+    needs: build-web
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-build
+          path: web
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./web

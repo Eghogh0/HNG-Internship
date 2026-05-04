@@ -11,6 +11,6 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "knexfile.ts"],
+  "include": ["src/**/*", "knexfile.js", "migrations", "migrations"],
   "exclude": ["node_modules", "dist"]
 }
