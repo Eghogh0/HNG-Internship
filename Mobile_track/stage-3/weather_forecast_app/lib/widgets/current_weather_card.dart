@@ -9,7 +9,7 @@ class CurrentWeatherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor: SystemMouseCursors.click,        // shows hand on desktop/web
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -29,9 +29,12 @@ class CurrentWeatherCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildInfoColumn(Icons.water_drop, '${weather.humidity}%', 'Humidity'),
-                  _buildInfoColumn(Icons.air, '${weather.windSpeed} m/s', 'Wind'),
-                  _buildInfoColumn(Icons.speed, '${weather.pressure} hPa', 'Pressure'),
+                  _buildInfoColumn(
+                      Icons.water_drop, '${weather.humidity}%', 'Humidity'),
+                  _buildInfoColumn(
+                      Icons.air, '${weather.windSpeed} m/s', 'Wind'),
+                  _buildInfoColumn(
+                      Icons.speed, '${weather.pressure} hPa', 'Pressure'),
                 ],
               ),
             ],

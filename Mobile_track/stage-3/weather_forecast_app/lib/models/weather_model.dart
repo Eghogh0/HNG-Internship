@@ -47,5 +47,5 @@ class WeatherModel {
       };
 
   String get iconUrl =>
-      '${'https://openweathermap.org/img/wn/'}$iconCode@2x.png';
+      'https://openweathermap.org/img/wn/$iconCode@2x.png';
 }

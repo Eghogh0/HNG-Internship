@@ -46,7 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ---------- Data Loading ----------
   Future<void> _initWeather() async {
-    setState(() { _isLoading = true; _error = null; });
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
     try {
       final connectivityResult = await Connectivity().checkConnectivity();
       _isOffline = connectivityResult == ConnectivityResult.none;
@@ -77,21 +80,29 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchWeatherByCity(String city) async {
-    setState(() { _isLoading = true; _error = null; });
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
     try {
       final weather = await _api.fetchCurrentWeatherByCity(city);
       final forecast = await _api.fetchForecastByCity(city);
       await _cache.cacheWeatherData(jsonEncode(weather.toJson()));
-      await _cache.cacheForecastData(
-          jsonEncode(forecast.map((e) => e.toJson()).toList()));
+      await _cache
+          .cacheForecastData(jsonEncode(forecast.map((e) => e.toJson()).toList()));
       setState(() {
         _currentWeather = weather;
         _forecast = forecast;
         _isLoading = false;
       });
     } catch (e) {
-      setState(() { _error = e.toString(); _isLoading = false; });
-      if (await _cache.isCacheValid()) await _loadCachedData();
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+      if (await _cache.isCacheValid()) {
+        await _loadCachedData();
+      }
     }
   }
 
@@ -146,6 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // ---------- About Dialog ----------
   void _showAboutDialog() {
     showDialog(
       context: context,
@@ -166,11 +178,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _handleKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent) {
       final keys = HardwareKeyboard.instance.logicalKeysPressed;
-      final hasCtrl =
-          keys.contains(LogicalKeyboardKey.controlLeft) ||
+      if (keys.contains(LogicalKeyboardKey.controlLeft) ||
           keys.contains(LogicalKeyboardKey.controlRight) ||
-          keys.contains(LogicalKeyboardKey.meta); // meta = Cmd on macOS
-      if (hasCtrl) {
+          keys.contains(LogicalKeyboardKey.meta)) {
         if (event.logicalKey == LogicalKeyboardKey.keyR) {
           _initWeather();
         } else if (event.logicalKey == LogicalKeyboardKey.keyF) {
@@ -178,12 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (event.logicalKey == LogicalKeyboardKey.keyH) {
           _initWeather();
         } else if (event.logicalKey == LogicalKeyboardKey.keyQ) {
-          if (kIsWeb) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Shortcut disabled on web')));
-          } else {
-            exit(0);
-          }
+          if (!kIsWeb) exit(0);
         } else if (event.logicalKey == LogicalKeyboardKey.keyD) {
           _navigateToForecastDetails();
         }
@@ -264,8 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-        body:
-            isDesktop ? _buildDesktopLayout(context) : _buildMobileLayout(context),
+        body: isDesktop ? _buildDesktopLayout(context) : _buildMobileLayout(context),
       ),
     );
   }
@@ -333,39 +337,32 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           const SizedBox(width: 8),
           PopupMenuButton<String>(
-            itemBuilder: (_) => const [
-              PopupMenuItem(
-                  value: 'refresh', child: Text('Refresh (Ctrl+R)')),
-              PopupMenuItem(value: 'quit', child: Text('Quit (Ctrl+Q)')),
+            itemBuilder: (_) => [
+              const PopupMenuItem(value: 'refresh', child: Text('Refresh (Ctrl+R)')),
+              const PopupMenuItem(value: 'quit', child: Text('Quit (Ctrl+Q)')),
             ],
             onSelected: (val) {
               if (val == 'refresh') _initWeather();
-              if (val == 'quit') {
-                if (kIsWeb) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Cannot quit a web app')));
-                } else {
-                  exit(0);
-                }
+              else if (val == 'quit') {
+                if (!kIsWeb) exit(0);
               }
             },
             child: const Text('File'),
           ),
           PopupMenuButton<String>(
-            itemBuilder: (_) => const [
-              PopupMenuItem(
-                  value: 'search', child: Text('Search (Ctrl+F)')),
-              PopupMenuItem(value: 'home', child: Text('Home (Ctrl+H)')),
+            itemBuilder: (_) => [
+              const PopupMenuItem(value: 'search', child: Text('Search (Ctrl+F)')),
+              const PopupMenuItem(value: 'home', child: Text('Home (Ctrl+H)')),
             ],
             onSelected: (val) {
               if (val == 'search') _navigateToSearch();
-              if (val == 'home') _initWeather();
+              else if (val == 'home') _initWeather();
             },
             child: const Text('Edit'),
           ),
           PopupMenuButton<String>(
-            itemBuilder: (_) => const [
-              PopupMenuItem(
+            itemBuilder: (_) => [
+              const PopupMenuItem(
                   value: 'forecast', child: Text('Forecast (Ctrl+D)')),
             ],
             onSelected: (val) {
@@ -374,8 +371,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Text('View'),
           ),
           PopupMenuButton<String>(
-            itemBuilder: (_) => const [
-              PopupMenuItem(value: 'about', child: Text('About')),
+            itemBuilder: (_) => [
+              const PopupMenuItem(value: 'about', child: Text('About')),
             ],
             onSelected: (val) {
               if (val == 'about') _showAboutDialog();
@@ -435,8 +432,8 @@ class _HomeScreenState extends State<HomeScreen> {
             if (_error != null)
               Padding(
                 padding: const EdgeInsets.only(top: 12),
-                child: Text(_error!,
-                    style: const TextStyle(color: Colors.orange)),
+                child:
+                    Text(_error!, style: const TextStyle(color: Colors.orange)),
               ),
           ],
         ),

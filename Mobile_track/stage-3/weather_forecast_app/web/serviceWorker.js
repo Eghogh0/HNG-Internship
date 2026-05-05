@@ -1,16 +1,17 @@
+const CACHE_NAME = 'weather-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/main.dart.js',
+  '/assets/AssetManifest.json',
+  '/assets/FontManifest.json',
+  '/assets/fonts/MaterialIcons-Regular.otf',
+  '/manifest.json'
+];
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open('weather-v1').then((cache) => {
-      return cache.addAll([
-        '/',
-        '/index.html',
-        '/main.dart.js',
-        '/assets/AssetManifest.json',
-        '/assets/FontManifest.json',
-        '/assets/fonts/MaterialIcons-Regular.otf',
-        // Add any other assets your app loads
-      ]);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
   );
 });
 
