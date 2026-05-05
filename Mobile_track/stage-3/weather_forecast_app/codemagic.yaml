@@ -1,0 +1,24 @@
+workflows:
+  build-all-desktop:
+    name: Build macOS, Linux, and Windows
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - flutter pub get
+    artifacts:
+      - build/macos/Build/Products/Release/*.app
+      - build/linux/x64/release/bundle/
+      - build/windows/x64/runner/Release/
+    publishing:
+      email:
+        recipients:
+          - YOUR_EMAIL@example.com
+    trigger:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
