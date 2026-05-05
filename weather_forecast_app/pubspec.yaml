@@ -1,0 +1,29 @@
+name: weather_forecast_app
+description: A cross‑platform weather app – HNG Stage 4
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  shared_preferences: ^2.2.2
+  shimmer: ^3.0.0
+  flutter_staggered_animations: ^1.1.1
+  page_transition: ^2.1.0
+  intl: ^0.18.1
+  connectivity_plus: ^5.0.2
+  url_strategy: ^0.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
